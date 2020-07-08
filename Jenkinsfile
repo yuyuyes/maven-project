@@ -1,16 +1,20 @@
 pipeline {
     agent any
+    tools{
+        maven 'local maven'
+    }
+    
     stages{
         stage('Build'){
-            steps{
-                sh 'mvn clean package'       
+            steps {
+                sh 'mvn clean package'
+            }
+            post {
+                success {
+                    echo '开始存档....'
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
             }
         }
-        post {
-            success {
-                echo 'starting to save'
-                archiveArtifacts artifacts: '**/target/*.war'
-            }
-        }
-    }  
+    }
 }
